@@ -1,0 +1,25 @@
+  <div class="player-names-container">
+    <span [ngClass]="{ active: gameService.currentPlayer() === 'X' }">
+        Player X: {{ gameService.player0() }}</span>
+    <span [ngClass]="{ active: gameService.currentPlayer() === 'O' }"
+      >Player O: {{ gameService.player1() }}</span
+    >
+  </div>
+<div class="game-container">
+
+  <div class="board">
+    @for(cell of gameService.currentBoard(); track $index){
+    <div class="cell" (click)="this.gameService.makeMove($index)">
+      {{ cell }}
+    </div>
+    }
+  </div>
+
+  @if(gameService.gameHasEnded()){
+  <span
+    >Winner is: {{ gameService.getPlayerName(gameService.currentPlayer()) }}!
+  </span>
+  <br />
+  <button (click)="gameService.resetBoard()">Reset Game</button>
+  }
+</div>
