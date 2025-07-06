@@ -10,4 +10,5 @@ import { CommonModule } from '@angular/common';
 })
 export class BoardComponent {
   gameService = inject(GameService);
+  //todo view of scores....
 }
