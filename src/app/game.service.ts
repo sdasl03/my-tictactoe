@@ -47,7 +47,7 @@ export class GameService {
     let newBoard = this.currentBoard();
     if (newBoard[index] === '' && !this.gameHasEnded() && this.numberOfPlays() < 9) {
       newBoard[index] = this.currentPlayer();
-      newBoard.splice(index, 1, this.currentPlayer());
+      //newBoard.splice(index, 1, this.currentPlayer());
       this.currentBoard.set(newBoard);
       this.changePlayer();
       this.numberOfPlays.set(this.numberOfPlays() + 1);
