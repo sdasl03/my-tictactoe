@@ -35,4 +35,13 @@ describe('GameService', () => {
 
   })
 
+  it('should end in a draw',()=>{
+    
+    // spyOn(service,'currentBoard').and.returnValue(['X','O','X','O','X','O','O','X','O']);
+    spyOn(service,'numberOfPlays').and.returnValue(9);
+    service.verifyCompletion();
+    expect(service.gameHasEnded()).toBeTrue();
+    //expect(service.currentPlayer()==='X').toBeTruthy();
+  })
+
 });
