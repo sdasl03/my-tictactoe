@@ -7,7 +7,8 @@ export class GameService {
   readonly currentLevel = signal(1);
   readonly currentPlayer = signal('X');
   readonly currentBoard = signal<string[]>(Array(9).fill(""));
-  readonly gameHasEnded = signal(false);
+  readonly gameIsWon = signal(false);
+  readonly gameIsDraw = signal(false);
   readonly numberOfPlays = signal(0);
   readonly player0 = signal<string | undefined>(undefined);
   readonly player1 = signal<string | undefined>(undefined);
@@ -45,9 +46,8 @@ export class GameService {
 
   makeMove(index: number) {
     let newBoard = this.currentBoard();
-    if (newBoard[index] === '' && !this.gameHasEnded() && this.numberOfPlays() < 9) {
+    if (newBoard[index] === '' && !this.gameIsWon() && this.numberOfPlays() < 9) {
       newBoard[index] = this.currentPlayer();
-      //newBoard.splice(index, 1, this.currentPlayer());
       this.currentBoard.set(newBoard);
       this.changePlayer();
       this.numberOfPlays.set(this.numberOfPlays() + 1);
@@ -71,19 +71,20 @@ export class GameService {
       const [a, b, c] = combination;
       const combinationFound: boolean = (this.currentBoard()[a] && this.currentBoard()[a] === this.currentBoard()[b] && this.currentBoard()[a] === this.currentBoard()[c]) || false;
       if (combinationFound) {
-        this.gameHasEnded.set(true);
+        this.gameIsWon.set(true);
         this.currentPlayer.set(this.currentBoard()[a]);
       }
     })
     if (this.numberOfPlays() > 8) {
-      this.gameHasEnded.set(true);
+      this.gameIsDraw.set(true);
     }
   }
 
   resetBoard() {
     this.currentBoard.set(Array(9).fill(""));
     this.changePlayer();
-    this.gameHasEnded.set(false);
+    this.gameIsWon.set(false);
+    this.gameIsDraw.set(false);
     this.currentPlayer.set('X');
     this.numberOfPlays.set(0);
   }

@@ -15,11 +15,16 @@ describe('GameService', () => {
   });
 
   it('should end the game as a win for X', () => {
-    spyOn(service,'currentBoard').and.returnValue(['X','X','X','O','','O','','','']);
+    spyOn(service, 'currentBoard').and.returnValue(['X', 'X', 'X', 'O', '', 'O', '', '', '']);
     service.verifyCompletion();
-    expect(service.gameHasEnded()).toBeTrue();
-    expect(service.currentPlayer()==='X').toBeTruthy();
-  })
+    expect(service.gameIsWon()).toBeTrue();
+    expect(service.currentPlayer() === 'X').toBeTruthy();
+  });
+  it('should end in a draw', () => {
+    spyOn(service, 'numberOfPlays').and.returnValue(9);
+    service.verifyCompletion();
+    expect(service.gameIsDraw()).toBeTrue();
+  });
 
   it('should make a move on an empty board', () => {
 
@@ -33,15 +38,8 @@ describe('GameService', () => {
     expect(oldNumberOfPlays).toBeLessThan(newNumberOfPlays);
     expect(newPlayer !== oldPlayer).toBeTruthy();
 
-  })
+  });
 
-  it('should end in a draw',()=>{
-    
-    // spyOn(service,'currentBoard').and.returnValue(['X','O','X','O','X','O','O','X','O']);
-    spyOn(service,'numberOfPlays').and.returnValue(9);
-    service.verifyCompletion();
-    expect(service.gameHasEnded()).toBeTrue();
-    //expect(service.currentPlayer()==='X').toBeTruthy();
-  })
+
 
 });
