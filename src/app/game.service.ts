@@ -1,10 +1,10 @@
 import { computed, Injectable, signal } from '@angular/core';
+import { ScoreWins } from './models/score.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {
-  readonly currentLevel = signal(1);
   readonly currentPlayer = signal('X');
   readonly currentBoard = signal<string[]>(Array(9).fill(""));
   readonly gameIsWon = signal(false);
@@ -12,6 +12,7 @@ export class GameService {
   readonly numberOfPlays = signal(0);
   readonly player0 = signal<string | undefined>(undefined);
   readonly player1 = signal<string | undefined>(undefined);
+  readonly score = signal<ScoreWins>({ winsPlayer0: 0, winsPlayer1: 0, draws: 0 });
 
   constructor() { }
 
@@ -25,19 +26,19 @@ export class GameService {
     let name = "";
     switch (symbol) {
       case "X":
-        name = this.player0() ||"";
+        name = this.player0() || "";
         break;
       case "O":
-        name = this.player1() ||"";
+        name = this.player1() || "";
         break;
     }
     console.log(name);
     return name;
   }
 
-  selectLevel(level: number) {
+  /*selectLevel(level: number) {
     this.currentLevel.set(level);
-  }
+  }*/
 
   changePlayer() {
     let nextPlayer = (this.currentPlayer() === 'X') ? 'O' : 'X';
@@ -70,14 +71,32 @@ export class GameService {
     winningCombinations.some((combination) => {
       const [a, b, c] = combination;
       const combinationFound: boolean = (this.currentBoard()[a] && this.currentBoard()[a] === this.currentBoard()[b] && this.currentBoard()[a] === this.currentBoard()[c]) || false;
+
       if (combinationFound) {
-        this.gameIsWon.set(true);
-        this.currentPlayer.set(this.currentBoard()[a]);
+        this.handleWin(this.currentBoard()[a]);
       }
     })
     if (this.numberOfPlays() > 8) {
-      this.gameIsDraw.set(true);
+      this.handleDraw();
     }
+  }
+
+  handleWin(winner: string) {
+    this.gameIsWon.set(true);
+    this.currentPlayer.set(winner);
+    const player0Score: number = (winner === 'X') ? (this.score().winsPlayer0) + 1 : (this.score().winsPlayer0);
+    const player1Score: number = (winner === 'O') ? (this.score().winsPlayer1) + 1 : (this.score().winsPlayer1);
+    const newScore: ScoreWins = { winsPlayer0: player0Score, winsPlayer1: player1Score, draws: this.score().draws };
+    this.score.set(newScore);
+  }
+
+  handleDraw() {
+    this.gameIsDraw.set(true);
+    this.score.set({
+      winsPlayer0: this.score().winsPlayer0
+      , winsPlayer1: this.score().winsPlayer1,
+      draws: (this.score().draws + 1)
+    });
   }
 
   resetBoard() {
@@ -89,7 +108,8 @@ export class GameService {
     this.numberOfPlays.set(0);
   }
 
-  boardReady = computed(()=>{
-    return this.player0()!=undefined &&this.player1()!= undefined;
-  })
+  boardReady = computed(() => {
+    return this.player0() != undefined && this.player1() != undefined;
+  });
+
 }
