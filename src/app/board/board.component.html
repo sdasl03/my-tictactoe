@@ -1,10 +1,25 @@
 <div class="player-names-container">
-  <span [ngClass]="{ active: gameService.currentPlayer() === 'X' }">
-    Player X: {{ gameService.player0() }}</span
+  <div
+    [ngClass]="{
+      active: gameService.currentPlayer() === 'X' && !gameService.gameIsDraw()
+    }"
   >
-  <span [ngClass]="{ active: gameService.currentPlayer() === 'O' }"
-    >Player O: {{ gameService.player1() }}</span
+    <span> Player X: {{ gameService.player0() }}</span>
+    <br />
+    <span>Wins: {{ gameService.score().winsPlayer0 }}</span>
+  </div>
+  <div [ngClass]="{ active: gameService.gameIsDraw() }">
+    <span>Draws: {{ gameService.score().draws }}</span>
+  </div>
+  <div
+    [ngClass]="{
+      active: gameService.currentPlayer() === 'O' && !gameService.gameIsDraw()
+    }"
   >
+    <span>Player O: {{ gameService.player1() }}</span>
+    <br />
+    <span>Wins: {{ gameService.score().winsPlayer1 }}</span>
+  </div>
 </div>
 <div class="game-container">
   <div class="board">
@@ -20,7 +35,7 @@
     >Winner is: {{ gameService.getPlayerName(gameService.currentPlayer()) }}!
   </span>
   }@else if(gameService.gameIsDraw()){
-    <span>.....Game is a Draw.....</span>
+  <span>.....Game is a Draw.....</span>
   }
   <button (click)="gameService.resetBoard()">Reset Game</button>
 </div>

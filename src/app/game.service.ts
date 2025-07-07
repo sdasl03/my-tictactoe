@@ -5,7 +5,6 @@ import { ScoreWins } from './models/score.interface';
   providedIn: 'root'
 })
 export class GameService {
-  readonly currentLevel = signal(1);
   readonly currentPlayer = signal('X');
   readonly currentBoard = signal<string[]>(Array(9).fill(""));
   readonly gameIsWon = signal(false);
@@ -37,9 +36,9 @@ export class GameService {
     return name;
   }
 
-  selectLevel(level: number) {
+  /*selectLevel(level: number) {
     this.currentLevel.set(level);
-  }
+  }*/
 
   changePlayer() {
     let nextPlayer = (this.currentPlayer() === 'X') ? 'O' : 'X';
