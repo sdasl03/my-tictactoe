@@ -47,13 +47,16 @@ export class GameService {
 
   makeMove(index: number) {
     let newBoard = this.currentBoard();
-    if (newBoard[index] === '' && !this.gameIsWon() && this.numberOfPlays() < 9) {
-      newBoard[index] = this.currentPlayer();
-      this.currentBoard.set(newBoard);
-      this.changePlayer();
-      this.numberOfPlays.set(this.numberOfPlays() + 1);
+    if (!this.gameIsWon() || !this.gameIsDraw()) {
+      if (newBoard[index] === '' && !this.gameIsWon() && this.numberOfPlays() < 9) {
+        newBoard[index] = this.currentPlayer();
+        this.currentBoard.set(newBoard);
+        this.changePlayer();
+        this.numberOfPlays.set(this.numberOfPlays() + 1);
+      }
+      this.verifyCompletion();
     }
-    this.verifyCompletion();
+
   }
 
   verifyCompletion() {
@@ -67,16 +70,15 @@ export class GameService {
       [2, 5, 8],
       [2, 4, 6]
     ];
-
     winningCombinations.some((combination) => {
       const [a, b, c] = combination;
       const combinationFound: boolean = (this.currentBoard()[a] && this.currentBoard()[a] === this.currentBoard()[b] && this.currentBoard()[a] === this.currentBoard()[c]) || false;
 
-      if (combinationFound) {
+      if (combinationFound && !this.gameIsWon()) {
         this.handleWin(this.currentBoard()[a]);
       }
     })
-    if (this.numberOfPlays() > 8) {
+    if (this.numberOfPlays() > 8 && !this.gameIsDraw()) {
       this.handleDraw();
     }
   }
