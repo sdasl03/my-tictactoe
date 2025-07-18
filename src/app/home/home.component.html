@@ -2,11 +2,11 @@
 
 <input #playerX type="text" placeholder="Player X" pattern="text" (input)="gameService.selectPlayerX(playerX.value)">
 <input #playerO type="text" placeholder="Player O" pattern="text" (input)="gameService.selectPlayerO(playerO.value)">
-<select #level (change)="this.gameService.selectLevel(+level)">
+<!-- <select #level (change)="this.gameService.selectLevel(+level)">
   @for(opt of levels; track $index){
   <option [value]="level" [selected]="+level.value===this.gameService.currentLevel()">{{opt}}</option>
   }
-</select>
+</select> -->
 <a [routerLink]="['/board']">
 <button [disabled]="!gameService.boardReady()">Start</button>
 </a>
